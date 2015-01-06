@@ -1,0 +1,122 @@
+#!/bin/bash
+
+###############################################################################
+# Configure my Workstation
+###############################################################################
+#Detect OS
+os=`lsb_release -is`
+
+#Get Username
+username=`whoami`
+
+#Where are we run from
+_script="$(readlink -f ${BASH_SOURCE[0]})"
+current_dir="$(dirname $_script)"
+
+#Change to your home directory (Otherwise git clone will fail if running under sudo)
+cd ~
+
+#Allow  the current user to sudo without a password
+echo "$username    ALL=(ALL)     NOPASSWD: ALL" > /etc/sudoers.d/$username
+chmod 440 /etc/sudoers.d/$username
+
+#Check for rsa_id
+
+#Install packages depending on distro
+if [[ "$os" == 'Fedora' ]]; then
+    #Install or update packages
+    sudo yum install -y tmux git curl keychain autojump vim-enhanced xclip
+
+    #Puppet Dev
+    sudo yum install -y puppet rubygems
+    sudo gem install puppet-lint
+
+elif [[ "$os" == 'CentOS' ]]; then
+    
+    #Add EPEL
+    sudo yum install epel-release
+
+    #Add tools
+    sudo yum install -y tmux git curl vim-enhanced xclip
+    sudo yum localinstall -y http://dl.fedoraproject.org/pub/epel/6/x86_64/autojump-19-2.el6.noarch.rpm
+    sudo yum localinstall -y http://pkgs.repoforge.org/keychain/keychain-2.7.0-1.el6.rf.noarch.rpm
+
+    #Puppet Dev
+    sudo yum install -y puppet rubygems
+    sudo gem install puppet-lint
+
+    #Install Chrome
+
+elif [[ "$os" == 'Debian' ]]; then
+    #Update
+    sudo apt-get update
+    #Install pre-requisits
+    sudo apt-get install -y tmux git curl vim-nox keychain autojump xclip
+    #Debian package does not automatically load autojump
+    if [[ ! -f /etc/profile.d/autojump.sh ]]; then
+        sudo cp /usr/share/autojump/autojump.sh /etc/profile.d/
+    fi
+
+    #Puppet Dev
+    sudo apt-get install -y puppet-common rubygems
+    sudo gem install puppet-lint
+else
+    echo "Unknown OS, check lsb_release -is"
+    exit 1
+fi
+
+# Configure Vim
+
+#Install pathogen
+mkdir -p ~/.vim/autoload ~/.vim/bundle;
+curl -Lk -Ss -o ~/.vim/autoload/pathogen.vim https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+
+#Vim Colourschemes
+if cd ~/.vim/bundle/vim-hybrid; then git pull; else git clone https://github.com/w0ng/vim-hybrid ~/.vim/bundle/vim-hybrid; fi
+if cd ~/.vim/bundle/jellybeans.vim; then git pull; else git clone https://github.com/nanotech/jellybeans.vim.git ~/.vim/bundle/jellybeans.vim; fi
+if cd ~/.vim/bundle/base16-vim; then git pull; else git clone https://github.com/chriskempson/base16-vim ~/.vim/bundle/base16-vim; fi
+
+#Vim Plugins 
+
+#Undo with tree structure (F5)
+if cd ~/.vim/bundle/gundo; then git pull; else git clone http://github.com/sjl/gundo.vim.git ~/.vim/bundle/gundo; fi
+#Autocomplete "snippets" (F2) start snip then press tab
+if cd ~/.vim/bundle/ultisnips; then git pull; else git clone https://github.com/SirVer/ultisnips ~/.vim/bundle/ultisnips; fi
+#My customised snippets
+if cd ~/.vim/UltiSnips; then git pull; else git clone git@github.com:jamiemoore/UltiSnips.git ~/.vim/UltiSnips; fi
+#Syntax highlighting
+if cd ~/.vim/bundle/syntastic; then git pull; else git clone https://github.com/scrooloose/syntastic ~/.vim/bundle/syntastic; fi
+# Automatic closing of quotes, parenthesis, brackets, etc., 
+if cd ~/.vim/bundle/delimitMate; then git pull; else git clone https://github.com/Raimondi/delimitMate ~/.vim/bundle/delimitMate; fi
+# Automatically adds closing tags <HTML></HTML>
+if cd ~/.vim/bundle/closetag.vim; then git pull; else git clone https://github.com/docunext/closetag.vim ~/.vim/bundle/closetag.vim; fi
+#Change the " or ' around words with cs'" 
+if cd ~/.vim/bundle/vim-surround; then git pull; else git clone git://github.com/tpope/vim-surround.git ~/.vim/bundle/vim-surround; fi
+# Fuzzy file browser (Ctrl-P)
+if cd ~/.vim/bundle/ctrlp; then git pull; else git clone https://github.com/kien/ctrlp.vim.git ~/.vim/bundle/ctrlp; fi
+#keyword completion system  
+if cd ~/.vim/bundle/neocomplcache.vim; then git pull; else git clone https://github.com/Shougo/neocomplcache.vim ~/.vim/bundle/neocomplcache.vim; fi
+#Ultrasnips compatibility with neocomlcache
+if cd ~/.vim/bundle/neocomplecache-ultisnips; then git pull; else git clone https://github.com/JazzCore/neocomplcache-ultisnips ~/.vim/bundle/neocomplecache-ultisnips; fi
+# Automatically align => with ,p 
+if cd ~/.vim/bundle/tabular; then git pull; else git clone https://github.com/godlygeek/tabular ~/.vim/bundle/tabular; fi
+#i Cool looking vim status line that shows git branch
+if cd ~/.vim/bundle/powerline; then git pull; else git clone https://github.com/Lokaltog/powerline ~/.vim/bundle/powerline; fi
+# Puppet support
+if cd ~/.vim/bundle/vim-puppet; then git pull; else git clone https://github.com/rodjek/vim-puppet ~/.vim/bundle/vim-puppet; fi
+# pre-made snips in most languages
+if cd ~/.vim/bundle/vim-snippets; then git pull; else git clone https://github.com/honza/vim-snippets.git ~/.vim/bundle/vim-snippets; fi
+# NERDTree
+if cd ~/.vim/bundle/nerdtree; then git pull; else git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree; fi
+#Configure the Powerline fonts so you get the nice arrow in powerline
+
+#bash git prompt
+if cd ~/.bash-git-prompt; then git pull; else git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt; fi
+
+#Download and link dotfiles
+if cd ~/dotfiles; then git pull; else git clone git@github.com:jamiemoore/dotfiles.git ~/dotfiles; fi
+~/dotfiles/dot-to-dots
+
+#Source your new dot files so you are good to go
+. ~/.bashrc
+. /etc/profile.d/autojump.sh
