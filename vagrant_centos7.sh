@@ -1,13 +1,17 @@
 #!/bin/bash
-#sudo yum group install -y "GNOME Desktop"
+
+#Install gnome
+sudo yum group install -y "GNOME Desktop"
+
+#Require lsb_release
 sudo yum install -y redhat-lsb-core
 
+#Create my user and add it to the vagrant group
 sudo useradd jamie
-echo "jamie    ALL=(ALL)     NOPASSWD: ALL" > /etc/sudoers.d/admins
-chmod 440 /etc/sudoers.d/admins
+usermod -a -G vagrant jamie
 
+#Run the workstation setup script
 sudo -u jamie /vagrant/setup
 
-#sudo -u jamie ./setup.sh
-#./setup
-#telinit 3
+#Switch to runlevel 5
+telinit 5
