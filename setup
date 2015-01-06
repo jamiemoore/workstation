@@ -3,38 +3,61 @@
 ###############################################################################
 # Configure my Workstation
 ###############################################################################
-#Detect OS
-os=`lsb_release -is`
-
-#Get Username
-username=`whoami`
 
 #Where are we run from
 _script="$(readlink -f ${BASH_SOURCE[0]})"
 current_dir="$(dirname $_script)"
 
+#Detect OS
+os=`lsb_release -is`
+minor_version=`lsb_release -rs`
+version=`echo $minor_version | cut -f1 -d '.'`
+
+#Get Username
+username=`whoami`
+
 #Change to your home directory (Otherwise git clone will fail if running under sudo)
 cd ~
 
-#Allow  the current user to sudo without a password
-echo "$username    ALL=(ALL)     NOPASSWD: ALL" > /etc/sudoers.d/$username
-chmod 440 /etc/sudoers.d/$username
+#Check for private key
+if [[ ! -f $current_dir/id_rsa ]]; then
+    echo "Please copy id_rsa into the current working directory."
+    exit 1
+fi
+#Check for public key
+if [[ ! -f $current_dir/id_rsa.pub ]]; then
+    echo "Please copy id_rsa into the current working directory."
+    exit 1
+fi
 
-#Check for rsa_id
+
+#Allow the current user to sudo without a password
+sudo sh -c 'echo "'"$username"'    ALL=(ALL)     NOPASSWD: ALL" > /etc/sudoers.d/'"$username"
+sudo sh -c 'chmod 440 /etc/sudoers.d/'"$username"
+
+#Check if sudo is working 
+if [[ $? -ne 0 ]]; then
+    echo "Failed to configure sudoers."
+    exit 2
+fi
+
+#Add github to known hosts
+ssh -o StrictHostKeyChecking=no github.com
+
+#Configure ssh keys
+if [[ ! -f ~/.ssh/id_rsa ]]; then
+    echo "Private key does not exist in .$username/.ssh/, adding."
+    cp -p $current_dir/id_rsa ~/.ssh/id_rsa
+    cp -p $current_dir/id_rsa.pub ~/.ssh/id_rsa.pub
+    chmod 600 ~/.ssh/id_rsa
+    chmod 600 ~/.ssh/id_rsa.pub
+fi
 
 #Install packages depending on distro
-if [[ "$os" == 'Fedora' ]]; then
-    #Install or update packages
-    sudo yum install -y tmux git curl keychain autojump vim-enhanced xclip
-
-    #Puppet Dev
-    sudo yum install -y puppet rubygems
-    sudo gem install puppet-lint
-
-elif [[ "$os" == 'CentOS' ]]; then
+if [ "$os" == 'CentOS' ] && [ "$version" == '7' ]; then
     
     #Add EPEL
-    sudo yum install epel-release
+    sudo yum install -y epel-release
 
     #Add tools
     sudo yum install -y tmux git curl vim-enhanced xclip
@@ -47,7 +70,7 @@ elif [[ "$os" == 'CentOS' ]]; then
 
     #Install Chrome
 
-elif [[ "$os" == 'Debian' ]]; then
+elif [ "$os" == 'Debian' ]  && [ "$version" == '7' ]; then
     #Update
     sudo apt-get update
     #Install pre-requisits
@@ -83,7 +106,7 @@ if cd ~/.vim/bundle/gundo; then git pull; else git clone http://github.com/sjl/g
 #Autocomplete "snippets" (F2) start snip then press tab
 if cd ~/.vim/bundle/ultisnips; then git pull; else git clone https://github.com/SirVer/ultisnips ~/.vim/bundle/ultisnips; fi
 #My customised snippets
-if cd ~/.vim/UltiSnips; then git pull; else git clone git@github.com:jamiemoore/UltiSnips.git ~/.vim/UltiSnips; fi
+if cd ~/.vim/UltiSnips; then git pull; else git clone  https://github.com/jamiemoore/UltiSnips.git ~/.vim/UltiSnips; fi
 #Syntax highlighting
 if cd ~/.vim/bundle/syntastic; then git pull; else git clone https://github.com/scrooloose/syntastic ~/.vim/bundle/syntastic; fi
 # Automatic closing of quotes, parenthesis, brackets, etc., 
@@ -108,15 +131,18 @@ if cd ~/.vim/bundle/vim-puppet; then git pull; else git clone https://github.com
 if cd ~/.vim/bundle/vim-snippets; then git pull; else git clone https://github.com/honza/vim-snippets.git ~/.vim/bundle/vim-snippets; fi
 # NERDTree
 if cd ~/.vim/bundle/nerdtree; then git pull; else git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree; fi
+
 #Configure the Powerline fonts so you get the nice arrow in powerline
 
 #bash git prompt
 if cd ~/.bash-git-prompt; then git pull; else git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt; fi
 
 #Download and link dotfiles
-if cd ~/dotfiles; then git pull; else git clone git@github.com:jamiemoore/dotfiles.git ~/dotfiles; fi
-~/dotfiles/dot-to-dots
+if cd ~/dotfiles; then git pull; else git clone  https://github.com/jamiemoore/dotfiles.git ~/dotfiles; fi
+~/dotfiles/join
 
-#Source your new dot files so you are good to go
-. ~/.bashrc
-. /etc/profile.d/autojump.sh
+#Source your new dot files so you are good to go, no need to do this when called by sudo
+if [[ -z "$SUDO_COMMAND" ]]; then
+    . ~/.bashrc
+    . /etc/profile.d/autojump.sh
+fi
