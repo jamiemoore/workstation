@@ -67,8 +67,7 @@ if [ "$os" == 'CentOS' ] && [ "$version" == '7' ]; then
     sudo yum install -y epel-release
 
     #Add tools
-    sudo yum install -y tmux git curl vim-enhanced xclip
-    sudo yum localinstall -y http://dl.fedoraproject.org/pub/epel/6/x86_64/autojump-19-2.el6.noarch.rpm
+    sudo yum install -y tmux git curl vim-enhanced xclip autojump
     sudo yum localinstall -y http://pkgs.repoforge.org/keychain/keychain-2.7.0-1.el6.rf.noarch.rpm
 
     #Puppet Dev
