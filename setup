@@ -74,6 +74,10 @@ if [ "$os" == 'CentOS' ] && [ "$version" == '7' ]; then
     sudo yum install -y puppet rubygems
     sudo gem install puppet-lint
 
+    #Python Dev
+    sudo yum install -y python-pip
+    sudo pip install virtualenvwrapper
+
     #Install Chrome
 
 elif [ "$os" == 'Debian' ]  && [ "$version" == '7' ]; then
