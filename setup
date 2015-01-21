@@ -147,6 +147,8 @@ if cd ~/.vim/bundle/vim-puppet; then git pull; else git clone https://github.com
 if cd ~/.vim/bundle/vim-snippets; then git pull; else git clone https://github.com/honza/vim-snippets.git ~/.vim/bundle/vim-snippets; fi
 # NERDTree
 if cd ~/.vim/bundle/nerdtree; then git pull; else git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree; fi
+# .json syntax
+if cd ~/.vim/bundle/vim-json; then git pull; else git clone https://github.com/elzr/vim-json ~/.vim/bundle/vim-json; fi
 
 #Configure the Powerline fonts so you get the nice arrow in powerline
 
