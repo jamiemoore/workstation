@@ -149,6 +149,8 @@ if cd ~/.vim/bundle/vim-snippets; then git pull; else git clone https://github.c
 if cd ~/.vim/bundle/nerdtree; then git pull; else git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree; fi
 # .json syntax
 if cd ~/.vim/bundle/vim-json; then git pull; else git clone https://github.com/elzr/vim-json ~/.vim/bundle/vim-json; fi
+# match html tags
+if cd ~/.vim/bundle/MatchTag; then git pull; else git clone https://github.com/gregsexton/MatchTag ~/.vim/bundle/MatchTag; fi
 
 #Configure the Powerline fonts so you get the nice arrow in powerline
 
@@ -160,7 +162,27 @@ if cd ~/dotfiles; then git pull; else git clone  https://github.com/jamiemoore/d
 ~/dotfiles/join
 
 #Make the projects directory
-mkdir ~/projects
+if [[ ! -d $HOME/projects ]]; then
+    mkdir $HOME/projects
+fi
+
+#Go development
+
+#TODO: Install Go
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+GOGITHUB=$GOPATH/src/github.com/jamiemoore
+
+if [[ ! -d $GOPATH ]]; then
+    mkdir $GOPATH
+fi
+
+if [[ ! -d $GOGITHUB ]]; then
+    mkdir -p $GOGITHUB
+fi
+
+go get github.com/tools/godep
 
 #Source your new dot files so you are good to go, no need to do this when called by sudo
 if [[ -z "$SUDO_COMMAND" ]]; then
