@@ -151,6 +151,8 @@ if cd ~/.vim/bundle/nerdtree; then git pull; else git clone https://github.com/s
 if cd ~/.vim/bundle/vim-json; then git pull; else git clone https://github.com/elzr/vim-json ~/.vim/bundle/vim-json; fi
 # match html tags
 if cd ~/.vim/bundle/MatchTag; then git pull; else git clone https://github.com/gregsexton/MatchTag ~/.vim/bundle/MatchTag; fi
+# match html tags
+if cd ~/.vim/bundle/vim-go; then git pull; else git clone https://github.com/fatih/vim-go ~/.vim/bundle/vim-go; fi
 
 #Configure the Powerline fonts so you get the nice arrow in powerline
 
