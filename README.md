@@ -10,8 +10,11 @@ Bash script used to configure my workstation
 
 ## Requirements
 
+* Configure the hostname
+* Configure the search domain
+* Create a user account
 * Public and Private ssh keys placed in .ssh
-* Currently Centos/RHEL 7 only
+* Currently CentOS 7 only
 
 ## Installation 
 
