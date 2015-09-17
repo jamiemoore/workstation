@@ -1,12 +1,15 @@
 #!/bin/bash
 
 ###############################################################################
-# Configure my Workstation
+# Configure my Workstation - Headless
 ###############################################################################
 
 #Where are we run from
 _script="$(readlink -f ${BASH_SOURCE[0]})"
 current_dir="$(dirname $_script)"
+
+#Install LSB
+sudo yum install -y redhat-lsb-core
 
 #Detect OS
 os=`lsb_release -is`
@@ -20,13 +23,13 @@ username=`whoami`
 cd ~
 
 #Check for private key
-if [[ ! -f $current_dir/id_rsa ]]; then
-    echo "Please copy id_rsa into the current working directory."
+if [[ ! -f ~/.ssh/id_rsa ]]; then
+    echo "Please copy id_rsa into the .ssh directory."
     exit 1
 fi
 #Check for public key
-if [[ ! -f $current_dir/id_rsa.pub ]]; then
-    echo "Please copy id_rsa into the current working directory."
+if [[ ! -f ~/.ssh/id_rsa.pub ]]; then
+    echo "Please copy id_rsa.pub into .ssh directory."
     exit 1
 fi
 
@@ -67,16 +70,22 @@ if [ "$os" == 'CentOS' ] && [ "$version" == '7' ]; then
     sudo yum install -y epel-release
 
     #Add tools
-    sudo yum install -y tmux git curl vim-enhanced xclip autojump
-    sudo yum localinstall -y http://pkgs.repoforge.org/keychain/keychain-2.7.0-1.el6.rf.noarch.rpm
+    sudo yum install -y tmux git curl vim-enhanced xclip autojump keychain mosh
 
     #Puppet Dev
     sudo yum install -y puppet rubygems
     sudo gem install puppet-lint
 
     #Python Dev
-    sudo yum install -y python-pip 
+    sudo yum install -y python-pip python-devel
+    sudo pip install --upgrade pip
     sudo pip install virtualenvwrapper
+
+    #Ansible Dev
+    sudo pip install ansible
+
+    #MySQL Client
+    sudo yum install -y mysql
 
     #Install Chrome
 
@@ -95,7 +104,7 @@ elif [ "$os" == 'Debian' ]  && [ "$version" == '7' ]; then
     sudo gem install puppet-lint
 
     #Python Dev
-    sudo yum install -y python-pip python-dev
+    sudo apt-get install -y python-pip python-dev
     sudo pip install virtualenvwrapper
 
 
@@ -139,8 +148,8 @@ if cd ~/.vim/bundle/neocomplcache.vim; then git pull; else git clone https://git
 if cd ~/.vim/bundle/neocomplecache-ultisnips; then git pull; else git clone https://github.com/JazzCore/neocomplcache-ultisnips ~/.vim/bundle/neocomplecache-ultisnips; fi
 # Automatically align => with ,p 
 if cd ~/.vim/bundle/tabular; then git pull; else git clone https://github.com/godlygeek/tabular ~/.vim/bundle/tabular; fi
-#i Cool looking vim status line that shows git branch
-if cd ~/.vim/bundle/powerline; then git pull; else git clone https://github.com/Lokaltog/powerline ~/.vim/bundle/powerline; fi
+#Using lightline instead of powerline because I don't want to install the font everywhere
+if cd ~/.vim/bundle/lightline.vim; then git pull; else git clone https://github.com/itchyny/lightline.vim ~/.vim/bundle/lightine.vim; fi
 # Puppet support
 if cd ~/.vim/bundle/vim-puppet; then git pull; else git clone https://github.com/rodjek/vim-puppet ~/.vim/bundle/vim-puppet; fi
 # pre-made snips in most languages
@@ -153,8 +162,8 @@ if cd ~/.vim/bundle/vim-json; then git pull; else git clone https://github.com/e
 if cd ~/.vim/bundle/MatchTag; then git pull; else git clone https://github.com/gregsexton/MatchTag ~/.vim/bundle/MatchTag; fi
 # match html tags
 if cd ~/.vim/bundle/vim-go; then git pull; else git clone https://github.com/fatih/vim-go ~/.vim/bundle/vim-go; fi
-
-#Configure the Powerline fonts so you get the nice arrow in powerline
+#Ansible yml
+if cd ~/.vim/bundle/vim-ansible-yaml; then git pull; else git clone http://github.com/chase/vim-ansible-yaml.git ~/.vim/bundle/vim-ansible-yaml; fi
 
 #bash git prompt
 if cd ~/.bash-git-prompt; then git pull; else git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt; fi
