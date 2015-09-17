@@ -4,7 +4,7 @@ workstation-setup
 Bash script used to configure my workstation
 
 * Installs tools
-* Installs Development environment
+* Installs my required development environments
 * Configures Vim
 * Installs my dotfiles repository
 
@@ -20,4 +20,6 @@ cd ~
 mkdir projects
 cd projects
 git clone https://github.com/jamiemoore/workstation-setup.git
+cd workstation-setup
+./setup
 ```

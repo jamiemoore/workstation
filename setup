@@ -149,7 +149,7 @@ if cd ~/.vim/bundle/neocomplecache-ultisnips; then git pull; else git clone http
 # Automatically align => with ,p 
 if cd ~/.vim/bundle/tabular; then git pull; else git clone https://github.com/godlygeek/tabular ~/.vim/bundle/tabular; fi
 #Using lightline instead of powerline because I don't want to install the font everywhere
-if cd ~/.vim/bundle/lightline.vim; then git pull; else git clone https://github.com/itchyny/lightline.vim ~/.vim/bundle/lightine.vim; fi
+if cd ~/.vim/bundle/lightline.vim; then git pull; else git clone https://github.com/itchyny/lightline.vim ~/.vim/bundle/lightline.vim; fi
 # Puppet support
 if cd ~/.vim/bundle/vim-puppet; then git pull; else git clone https://github.com/rodjek/vim-puppet ~/.vim/bundle/vim-puppet; fi
 # pre-made snips in most languages
