@@ -1,0 +1,6 @@
+language: generic
+
+script: cp install.sh install.txt
+
+addons:
+    artifacts: true
