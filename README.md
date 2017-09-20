@@ -1,28 +1,49 @@
-workstation-setup
+dev-environemnt
 =================
 
-Bash script used to configure my workstation
+Quickly configure my developer environment. 
 
-* Installs tools
-* Installs my required development environments
-* Configures Vim
-* Installs my dotfiles repository
+
 
 ## Requirements
 
-* Configure the hostname
-* Configure the search domain
-* Create a user account
-* Public and Private ssh keys placed in .ssh
-* Currently CentOS 7 only
+* Only Supports Centos7
 
-## Installation 
+* Requires ssh keys to be loaded into an agent
 
-```bash
-cd ~
-mkdir projects
-cd projects
-git clone https://github.com/jamiemoore/workstation-setup.git
-cd workstation-setup
-./setup
-```
+* Requires gcc
+
+  ​
+
+
+## Installation
+
+* Install using curl
+
+  ```bash
+  curl https://install.jamie.so | bash
+
+  or
+
+  curl https://raw.githubusercontent.com/jamiemoore/workstation-setup/master/install.sh | bash
+  ```
+
+  ​
+
+
+## Development in dockerfile
+
+
+* Build the dockerfile
+
+  ```bash
+  docker build -t "jamie/ws-setup" .
+  ```
+
+
+* Run the docker file
+
+  ```bash
+  docker run -it -h "dockerws" -v ${PWD}:/home/jamie/workstation-setup jamie/ws-setup
+  ```
+

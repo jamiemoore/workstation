@@ -1,20 +1,53 @@
 #!/bin/bash
 
+
+#
+#
+#
+
+function isamac {
+    if [ -d "/users" ]; then
+      return 0
+    fi
+      return 1
+}
+
+
+exit
+
+
+
+quit
+
+
 ###############################################################################
 # Configure my Workstation - Headless
 ###############################################################################
 
-#Where are we run from
-_script="$(readlink -f ${BASH_SOURCE[0]})"
-current_dir="$(dirname $_script)"
+#if isamac ; then
 
-#Install LSB
-sudo yum install -y redhat-lsb-core
+#Readlink on a mac
+brew install coreutils
+
+alias readlink=greadlink
+
+#else
+
+#Install LSB if on CentOS
+#sudo yum install -y redhat-lsb-core
 
 #Detect OS
-os=`lsb_release -is`
-minor_version=`lsb_release -rs`
-version=`echo $minor_version | cut -f1 -d '.'`
+#os=`lsb_release -is`
+#minor_version=`lsb_release -rs`
+#version=`echo $minor_version | cut -f1 -d '.'`
+
+#fi
+
+#Where are we run from
+_script="$(greadlink -f ${BASH_SOURCE[0]})"
+current_dir="$(dirname $_script)"
+
+#exit
 
 #Get Username
 username=`whoami`
@@ -39,10 +72,10 @@ sudo sh -c 'echo "'"$username"'    ALL=(ALL)     NOPASSWD: ALL" > /etc/sudoers.d
 sudo sh -c 'chmod 440 /etc/sudoers.d/'"$username"
 
 #Check if sudo is working 
-if [[ $? -ne 0 ]]; then
-    echo "Failed to configure sudoers."
-    exit 2
-fi
+#if [[ $? -ne 0 ]]; then
+#    echo "Failed to configure sudoers."
+#    exit 2
+#fi
 
 #Add github to known hosts
 ssh -o StrictHostKeyChecking=no github.com
@@ -65,7 +98,7 @@ fi
 
 #Install packages depending on distro
 if [ "$os" == 'CentOS' ] && [ "$version" == '7' ]; then
-    
+
     #Add EPEL
     sudo yum install -y epel-release
 
@@ -84,10 +117,6 @@ if [ "$os" == 'CentOS' ] && [ "$version" == '7' ]; then
     #Ansible Dev
     sudo pip install ansible
 
-    #MySQL Client
-    sudo yum install -y mysql
-
-    #Install Chrome
 
 elif [ "$os" == 'Debian' ]  && [ "$version" == '7' ]; then
     #Update
@@ -110,72 +139,20 @@ elif [ "$os" == 'Debian' ]  && [ "$version" == '7' ]; then
 
 else
     echo "Unknown OS, check lsb_release -is"
-    exit 1
+#    exit 1
 fi
 
-# Configure Vim
-
-#Install pathogen
-mkdir -p ~/.vim/autoload ~/.vim/bundle;
-curl -Lk -Ss -o ~/.vim/autoload/pathogen.vim https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
-
-#Vim Colourschemes
-if cd ~/.vim/bundle/vim-hybrid; then git pull; else git clone https://github.com/w0ng/vim-hybrid ~/.vim/bundle/vim-hybrid; fi
-if cd ~/.vim/bundle/jellybeans.vim; then git pull; else git clone https://github.com/nanotech/jellybeans.vim.git ~/.vim/bundle/jellybeans.vim; fi
-if cd ~/.vim/bundle/base16-vim; then git pull; else git clone https://github.com/chriskempson/base16-vim ~/.vim/bundle/base16-vim; fi
-
-#Vim Plugins 
-
-#Undo with tree structure (F5)
-if cd ~/.vim/bundle/gundo; then git pull; else git clone http://github.com/sjl/gundo.vim.git ~/.vim/bundle/gundo; fi
-#Autocomplete "snippets" (F2) start snip then press tab
-if cd ~/.vim/bundle/ultisnips; then git pull; else git clone https://github.com/SirVer/ultisnips ~/.vim/bundle/ultisnips; fi
-#My customised snippets
-if cd ~/.vim/UltiSnips; then git pull; else git clone  https://github.com/jamiemoore/UltiSnips.git ~/.vim/UltiSnips; fi
-#Syntax highlighting
-if cd ~/.vim/bundle/syntastic; then git pull; else git clone https://github.com/scrooloose/syntastic ~/.vim/bundle/syntastic; fi
-# Automatic closing of quotes, parenthesis, brackets, etc., 
-if cd ~/.vim/bundle/delimitMate; then git pull; else git clone https://github.com/Raimondi/delimitMate ~/.vim/bundle/delimitMate; fi
-# Automatically adds closing tags <HTML></HTML>
-if cd ~/.vim/bundle/closetag.vim; then git pull; else git clone https://github.com/docunext/closetag.vim ~/.vim/bundle/closetag.vim; fi
-#Change the " or ' around words with cs'" 
-if cd ~/.vim/bundle/vim-surround; then git pull; else git clone git://github.com/tpope/vim-surround.git ~/.vim/bundle/vim-surround; fi
-# Fuzzy file browser (Ctrl-P)
-if cd ~/.vim/bundle/ctrlp; then git pull; else git clone https://github.com/kien/ctrlp.vim.git ~/.vim/bundle/ctrlp; fi
-#keyword completion system  
-if cd ~/.vim/bundle/neocomplcache.vim; then git pull; else git clone https://github.com/Shougo/neocomplcache.vim ~/.vim/bundle/neocomplcache.vim; fi
-#Ultrasnips compatibility with neocomlcache
-if cd ~/.vim/bundle/neocomplecache-ultisnips; then git pull; else git clone https://github.com/JazzCore/neocomplcache-ultisnips ~/.vim/bundle/neocomplecache-ultisnips; fi
-# Automatically align => with ,p 
-if cd ~/.vim/bundle/tabular; then git pull; else git clone https://github.com/godlygeek/tabular ~/.vim/bundle/tabular; fi
-#Using lightline instead of powerline because I don't want to install the font everywhere
-if cd ~/.vim/bundle/lightline.vim; then git pull; else git clone https://github.com/itchyny/lightline.vim ~/.vim/bundle/lightline.vim; fi
-# Puppet support
-if cd ~/.vim/bundle/vim-puppet; then git pull; else git clone https://github.com/rodjek/vim-puppet ~/.vim/bundle/vim-puppet; fi
-# pre-made snips in most languages
-if cd ~/.vim/bundle/vim-snippets; then git pull; else git clone https://github.com/honza/vim-snippets.git ~/.vim/bundle/vim-snippets; fi
-# NERDTree
-if cd ~/.vim/bundle/nerdtree; then git pull; else git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree; fi
-# .json syntax
-if cd ~/.vim/bundle/vim-json; then git pull; else git clone https://github.com/elzr/vim-json ~/.vim/bundle/vim-json; fi
-# match html tags
-if cd ~/.vim/bundle/MatchTag; then git pull; else git clone https://github.com/gregsexton/MatchTag ~/.vim/bundle/MatchTag; fi
-# match html tags
-if cd ~/.vim/bundle/vim-go; then git pull; else git clone https://github.com/fatih/vim-go ~/.vim/bundle/vim-go; fi
-#Ansible yml
-if cd ~/.vim/bundle/vim-ansible-yaml; then git pull; else git clone http://github.com/chase/vim-ansible-yaml.git ~/.vim/bundle/vim-ansible-yaml; fi
-
-#bash git prompt
-if cd ~/.bash-git-prompt; then git pull; else git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt; fi
-
 #Download and link dotfiles
-if cd ~/dotfiles; then git pull; else git clone  https://github.com/jamiemoore/dotfiles.git ~/dotfiles; fi
-~/dotfiles/join
+if cd ~/projects/dotfiles; then git pull; else git clone  https://github.com/jamiemoore/dotfiles.git ~/projects/dotfiles; fi
+~/projects/dotfiles/join
 
 #Make the projects directory
 if [[ ! -d $HOME/projects ]]; then
     mkdir $HOME/projects
 fi
+
+#bash git prompt
+if cd ~/.bash-git-prompt; then git pull; else git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt; fi
 
 #Go development
 
