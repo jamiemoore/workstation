@@ -4,8 +4,11 @@ script: cp install.sh install.txt
 
 deploy:
   provider: s3
+  file: install.txt
   access_key_id: $ARTIFACTS_KEY
   secret_access_key: $ARTIFACTS_SECRET
   bucket: $ARTIFACTS_BUCKET 
-  skip_cleanup: true
   region: $ARTIFACTS_REGION
+  skip_cleanup: true
+  on:
+    branch: master
