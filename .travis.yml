@@ -10,5 +10,6 @@ deploy:
   bucket: $ARTIFACTS_BUCKET 
   region: $ARTIFACTS_REGION
   skip_cleanup: true
+  acl: public_read
   on:
     branch: master
