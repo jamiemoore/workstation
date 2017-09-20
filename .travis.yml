@@ -1,8 +1,6 @@
 language: generic
 
-script: 
-  mkdir build
-  cp install.sh build/install.txt
+script: mkdir build; cp install.sh build/install.txt
 
 deploy:
   provider: s3
