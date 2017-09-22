@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# remote.sh - setup a remote system for development
+# install.sh - quickly setup my development environment
 ###############################################################################
 
 
@@ -74,6 +74,15 @@ create_projects_directory() {
     #Make the projects directory if it doesn't exist already
     if [[ ! -d $HOME/projects ]]; then
         mkdir $HOME/projects
+    fi
+
+}
+
+create_bin_directory() {
+
+    #Make the bin directory if it doesn't exist already
+    if [[ ! -d $HOME/bin ]]; then
+        mkdir $HOME/bin
     fi
 
 }
@@ -192,10 +201,10 @@ golang() {
 
 }
 
-check_gcc() {
+check_docker() {
 
-    if [[ ! `gcc -v > /dev/null 2>&1` ]]; then
-        echo "gcc not found, please install"
+    if [[ `docker > /dev/null 2>&1` ]]; then
+        echo "docker not found, please install"
         exit 1
     fi
 
@@ -204,19 +213,24 @@ check_gcc() {
 install_git() {
 
 
-curl https://github.com/git/git/archive/v2.14.1.tar.gz
+
+chmod +x ~/bin/git
+
+    #ln -fs ${PWD}/apps/git/git ~/bin/git
+
 
 }
 
 
 check_ssh_agent
 add_user_to_sudoers
-check_gcc
+check_docker
+create_projects_directory
+create_bin_directory
 install_git
 #install_software_using_sudo
-create_projects_directory
 #configure_vim
-#dotfiles
+dotfiles
 #git_bash_prompt
 #golang
 
