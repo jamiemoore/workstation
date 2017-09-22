@@ -218,8 +218,16 @@ install_git() {
 
     #install the wrapper.
     rm -f ~/bin/git
-    curl https://raw.githubusercontent.com/jamiemoore/dev-environment/master/apps/git/git -o ~/bin/git > /dev/null 2>&1
+    curl https://raw.githubusercontent.com/jamiemoore/docker-devtools/master/git -o ~/bin/git > /dev/null 2>&1
     chmod +x ~/bin/git
+}
+
+install_tools_using_docker () {
+
+    #Download and link dotfiles
+    if cd ~/projects/docker-devools; then git pull; else git clone  https://github.com/jamiemoore/docker-devtools.git ~/projects/docker-devtools; fi
+    ~/projects/docker-devtools/install.sh
+
 }
 
 
@@ -230,6 +238,7 @@ create_projects_directory
 create_bin_directory
 install_git
 #install_software_using_sudo
+install_tools_using_docker
 #configure_vim
 dotfiles
 git_bash_prompt
