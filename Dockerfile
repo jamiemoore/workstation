@@ -18,6 +18,6 @@ RUN useradd jamie
 RUN usermod -G docker jamie
 USER jamie
 
-WORKDIR /home/jamie/workstation-setup
+WORKDIR /home/jamie/dev-environment
 
-CMD rm -f /home/jamie/.ssh/id_rsa; ssh-keygen -q -t rsa -f /home/jamie/.ssh/id_rsa -N ''; eval "$(ssh-agent -s)" > /dev/null ; ssh-add /home/jamie/.ssh/id_rsa > /dev/null 2>&1; /bin/bash
+CMD rm -f /home/jamie/.ssh/id_rsa; ssh-keygen -q -t rsa -f /home/jamie/.ssh/id_rsa -N ''; eval "$(ssh-agent -s)" > /dev/null ; ssh-add /home/jamie/.ssh/id_rsa > /dev/null 2>&1; export PATH=~/bin/:$PATH; /bin/bash

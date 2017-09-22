@@ -230,7 +230,7 @@ create_projects_directory
 create_bin_directory
 install_git
 #install_software_using_sudo
-configure_vim
+#configure_vim
 dotfiles
 git_bash_prompt
 #golang
