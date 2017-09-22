@@ -23,6 +23,8 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #Get Username
 username=`whoami`
 
+export PATH=~/bin:$PATH
+
 
 check_ssh_agent() {
 
@@ -53,7 +55,7 @@ install_software_using_sudo() {
     sudo yum groupinstall -y "Development tools"
 
     #Add tools
-    sudo yum install -y tmux git curl vim-enhanced xclip autojump keychain mosh
+    sudo yum install -y tmux vim-enhanced xclip autojump keychain
 
     #Puppet Dev
     sudo yum install -y puppet rubygems
@@ -109,7 +111,7 @@ configure_vim() {
     #Vim Plugins 
 
     #Undo with tree structure (F5)
-    if cd ~/.vim/bundle/gundo; then git pull; else git clone http://github.com/sjl/gundo.vim.git ~/.vim/bundle/gundo; fi
+    if cd ~/.vim/bundle/gundo; then git pull; else git clone https://github.com/sjl/gundo.vim.git ~/.vim/bundle/gundo; fi
     #Autocomplete "snippets" (F2) start snip then press tab
     if cd ~/.vim/bundle/ultisnips; then git pull; else git clone https://github.com/SirVer/ultisnips ~/.vim/bundle/ultisnips; fi
     #My customised snippets
@@ -145,7 +147,7 @@ configure_vim() {
     # match html tags
     if cd ~/.vim/bundle/vim-go; then git pull; else git clone https://github.com/fatih/vim-go ~/.vim/bundle/vim-go; fi
     #Ansible yml
-    if cd ~/.vim/bundle/vim-ansible-yaml; then git pull; else git clone http://github.com/chase/vim-ansible-yaml.git ~/.vim/bundle/vim-ansible-yaml; fi
+    if cd ~/.vim/bundle/vim-ansible-yaml; then git pull; else git clone https://github.com/chase/vim-ansible-yaml.git ~/.vim/bundle/vim-ansible-yaml; fi
 
     #Javascript
     if cd ~/.vim/bundle/vim-javascript; then git pull; else git clone https://github.com/pangloss/vim-javascript.git ~/.vim/bundle/vim-javascript; fi
@@ -162,7 +164,7 @@ dotfiles() {
 
     #Download and link dotfiles
     if cd ~/projects/dotfiles; then git pull; else git clone  https://github.com/jamiemoore/dotfiles.git ~/projects/dotfiles; fi
-    ~/projects/dotfiles/join
+    ~/projects/dotfiles/join.sh
 
 }
 
@@ -212,13 +214,11 @@ check_docker() {
 
 install_git() {
 
+    #Grab the docker file
 
-
-chmod +x ~/bin/git
-
-    #ln -fs ${PWD}/apps/git/git ~/bin/git
-
-
+    #install the wrapper.
+    curl https://raw.githubusercontent.com/jamiemoore/dev-environment/master/apps/git/git -o ~/bin/git > /dev/null 2>&1
+    chmod +x ~/bin/git
 }
 
 
@@ -229,12 +229,10 @@ create_projects_directory
 create_bin_directory
 install_git
 #install_software_using_sudo
-#configure_vim
+configure_vim
 dotfiles
 #git_bash_prompt
 #golang
-
-export PATH=$HOME/bin:$PATH
 
 # Now that we know the whole script has downloaded, run it.
 }
