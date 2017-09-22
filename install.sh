@@ -231,7 +231,7 @@ install_git
 #install_software_using_sudo
 configure_vim
 dotfiles
-#git_bash_prompt
+git_bash_prompt
 #golang
 
 # Now that we know the whole script has downloaded, run it.
