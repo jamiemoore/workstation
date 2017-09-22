@@ -1,0 +1,8 @@
+#!/bin/bash
+
+CONTAINER_DIR=${PWD:${#HOME}}
+CONTAINER_CMD=git
+
+#docker run --rm -it -e "CONTAINER_DIR=$CONTAINER_DIR" -h "git" -v ${HOME}:/home/jamie jamie/git
+sudo docker run --rm -it  -e "CONTAINER_CMD=$CONTAINER_CMD" -e "CONTAINER_DIR=$CONTAINER_DIR" -h "git" -v home:/home/jamie jamie/git "$@"
+
