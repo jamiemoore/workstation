@@ -217,6 +217,7 @@ install_git() {
     #Grab the docker file
 
     #install the wrapper.
+    rm -f ~/bin/git
     curl https://raw.githubusercontent.com/jamiemoore/dev-environment/master/apps/git/git -o ~/bin/git > /dev/null 2>&1
     chmod +x ~/bin/git
 }
