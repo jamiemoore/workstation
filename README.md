@@ -1,7 +1,7 @@
-dev-environemnt
+dev-environment
 =================
 
-Quickly configure my developer environment. 
+Quickly configure my developer environment.
 
 
 
@@ -46,4 +46,3 @@ Quickly configure my developer environment.
   ```bash
   docker run -it -h "dockerws" -v ${PWD}:/home/jamie/workstation-setup jamie/ws-setup
   ```
-
