@@ -46,6 +46,13 @@ add_user_to_sudoers() {
 
 }
 
+display_install_command() {
+
+echo "Install tools using the following command: sudo yum install -y epel-release ; sudo yum groupinstall -y devtools ; sudo yum install -y tmux vim-enhanced autojump python-pip python-devel ; sudo pip install virtualenvwrapper ; sudo pip install awscli ; sudo pip install jq ; sudo pip install ansible "
+
+
+}
+
 install_software_using_sudo() {
 
     #Add EPEL
@@ -203,6 +210,25 @@ golang() {
 
 }
 
+check_git() {
+
+    if [[ `git > /dev/null 2>&1` ]]; then
+        echo "vim not found, please install"
+        exit 1
+    fi
+
+}
+
+check_vim() {
+
+    if [[ `vim > /dev/null 2>&1` ]]; then
+        echo "vim not found, please install"
+        exit 1
+    fi
+
+}
+
+
 check_docker() {
 
     if [[ `docker > /dev/null 2>&1` ]]; then
@@ -218,27 +244,28 @@ install_git() {
 
     #install the wrapper.
     rm -f ~/bin/git
-    curl https://raw.githubusercontent.com/jamiemoore/docker-devtools/master/git -o ~/bin/git > /dev/null 2>&1
+    curl https://raw.githubusercontent.com/jamiemoore/docker-devtools/master/stdapp -o ~/bin/git > /dev/null 2>&1
     chmod +x ~/bin/git
 }
 
 install_tools_using_docker () {
 
     #Download and link dotfiles
-    if cd ~/projects/docker-devools; then git pull; else git clone  https://github.com/jamiemoore/docker-devtools.git ~/projects/docker-devtools; fi
+    if cd ~/projects/docker-devtools; then git pull; else git clone  https://github.com/jamiemoore/docker-devtools.git ~/projects/docker-devtools; fi
     ~/projects/docker-devtools/install.sh
 
 }
 
-
+display_install_command
 check_ssh_agent
-add_user_to_sudoers
-check_docker
+check_git
+#add_user_to_sudoers
+#check_docker
 create_projects_directory
 create_bin_directory
-install_git
+#install_git
 #install_software_using_sudo
-install_tools_using_docker
+#install_tools_using_docker
 #configure_vim
 dotfiles
 git_bash_prompt
