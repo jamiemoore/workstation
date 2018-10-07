@@ -1,7 +1,7 @@
-dev-environment
+workstation
 =================
 
-Quickly configure my developer environment.
+Quickly configure my workstation developer environment.
 
 
 
