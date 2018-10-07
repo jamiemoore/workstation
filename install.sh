@@ -29,6 +29,7 @@ export PATH=~/bin:$PATH
 check_ssh_agent() {
 
     #Check for entries in the ssh-agent
+    echo "Checking for ssh agent"
     if [[ ! `ssh-add -l | grep 256` ]]; then
         echo "Please the add your ssh key into the agent."
         exit 1
@@ -81,6 +82,7 @@ install_software_using_sudo() {
 create_projects_directory() {
 
     #Make the projects directory if it doesn't exist already
+    echo "Create projects directory"
     if [[ ! -d $HOME/projects ]]; then
         mkdir $HOME/projects
     fi
@@ -90,6 +92,7 @@ create_projects_directory() {
 create_bin_directory() {
 
     #Make the bin directory if it doesn't exist already
+    echo "Create bin directory"
     if [[ ! -d $HOME/bin ]]; then
         mkdir $HOME/bin
     fi
@@ -98,15 +101,19 @@ create_bin_directory() {
 
 configure_vim() {
 
+    echo "Configuring vim"
     #Add github to known hosts
-    set +e
-    ssh -o StrictHostKeyChecking=no github.com
-    set -e
+    #echo "Turning off strict host key checking for github.com"
+    #set +e
+    #ssh -o StrictHostKeyChecking=no github.com
+    #set -e
 
     #Change to your home directory (Otherwise git clone will fail if running under sudo)
+    echo "Changing to home directory"
     cd ~
 
     #Install pathogen
+    echo "Installing pathogen"
     mkdir -p ~/.vim/autoload ~/.vim/bundle;
     curl -Lk -Ss -o ~/.vim/autoload/pathogen.vim https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 
@@ -130,7 +137,7 @@ configure_vim() {
     # Automatically adds closing tags <HTML></HTML>
     if cd ~/.vim/bundle/closetag.vim; then git pull; else git clone https://github.com/docunext/closetag.vim ~/.vim/bundle/closetag.vim; fi
     #Change the " or ' around words with cs'" 
-    if cd ~/.vim/bundle/vim-surround; then git pull; else git clone git://github.com/tpope/vim-surround.git ~/.vim/bundle/vim-surround; fi
+    if cd ~/.vim/bundle/vim-surround; then git pull; else git clone https://github.com/tpope/vim-surround.git ~/.vim/bundle/vim-surround; fi
     # Fuzzy file browser (Ctrl-P)
     if cd ~/.vim/bundle/ctrlp; then git pull; else git clone https://github.com/kien/ctrlp.vim.git ~/.vim/bundle/ctrlp; fi
     #keyword completion system  
@@ -212,8 +219,9 @@ golang() {
 
 check_git() {
 
+    echo "Checking for git"
     if [[ `git > /dev/null 2>&1` ]]; then
-        echo "vim not found, please install"
+        echo "git not found, please install"
         exit 1
     fi
 
@@ -221,16 +229,19 @@ check_git() {
 
 check_vim() {
 
-    if [[ `vim > /dev/null 2>&1` ]]; then
+    echo "Checking for vim"
+    if [[ `which vim > /dev/null 2>&1` ]]; then
         echo "vim not found, please install"
         exit 1
     fi
+    echo "Finished checking vim"
 
 }
 
 
 check_docker() {
 
+    echo "Checking for docker"
     if [[ `docker > /dev/null 2>&1` ]]; then
         echo "docker not found, please install"
         exit 1
@@ -256,9 +267,10 @@ install_tools_using_docker () {
 
 }
 
-display_install_command
+#display_install_command
 check_ssh_agent
 check_git
+check_vim
 #add_user_to_sudoers
 #check_docker
 create_projects_directory
@@ -266,10 +278,10 @@ create_bin_directory
 #install_git
 #install_software_using_sudo
 #install_tools_using_docker
-#configure_vim
+configure_vim
 dotfiles
 git_bash_prompt
-#golang
+golang
 
 # Now that we know the whole script has downloaded, run it.
 }
