@@ -1,5 +1,4 @@
 FROM centos:7
-MAINTAINER Jamie Moore "jbgmoore@gmail.com"
 
 RUN yum install -y openssh-clients
 RUN yum install -y sudo
