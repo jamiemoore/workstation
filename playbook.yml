@@ -1,0 +1,175 @@
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  gather_subset:
+    - "!all"
+    - "min"
+  vars:
+    brew_packages:
+      - coreutils
+      - git
+      - tmux
+      - tldr
+      - ack
+      - autojump
+      - awscli
+      - curl
+      - fzf
+      - gh
+      - go
+      - mise
+      - mysql-client
+      - parallel
+      - yq
+      - jq
+      - aws-vault
+      - pipx
+      - btop
+      - stow
+      - whois
+    pipx_packages:
+      - mitmproxy
+    docker_debian_packages:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+
+  tasks:
+    # - name: Show Facts
+    #   debug:
+    #     msg: "{{ ansible_facts }}"
+
+    - name: Install Homebrew
+      block:
+        - name: Check if Homebrew exists
+          ansible.builtin.raw: which brew
+          # check_mode: false #What does this do?
+          changed_when: false
+          failed_when: homebrew_exists.rc > 1
+          register: homebrew_exists
+
+        - name: Installing Homebrew
+          ansible.builtin.shell: >
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          become: true
+          become_user: root
+          when: homebrew_exists.rc == 1
+
+    - name: Homebrew Stuff
+      when: homebrew_exists.rc == 0
+      block:
+        - name: Updating Homebrew
+          community.general.homebrew:
+            update_homebrew: true
+          register: result
+          until: result is successful
+
+        - name: Upgrading Homebrew Packages
+          community.general.homebrew:
+            upgrade_all: true
+          register: result
+          until: result is successful
+
+        - name: Installing Homebrew Packages
+          community.general.homebrew:
+            name: "{{ brew_packages }}"
+            state: present
+
+    - name: Changing Shell To ZSH
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        shell: /bin/zsh
+      become: true
+      become_user: root
+
+    - name: Allow user to sudo without a password
+      community.general.sudoers:
+        name: userisroot
+        state: present
+        user: "{{ ansible_user_id }}"
+        runas: root
+        commands: ALL
+      become: true
+
+    - name: Get pipx location
+      changed_when: false
+      shell: which pipx
+      register: pipx_location
+
+    - name: Install pipx packages
+      community.general.pipx:
+        executable: "{{ pipx_location.stdout }}"
+        name: "{{ item }}"
+        state: present
+      loop: "{{ pipx_packages }}"
+
+    - name: Install Docker on Debian
+      when: ansible_facts['os_family'] == "Debian"
+      become: true
+      block:
+        - name: Install and Update Aptitude
+          apt:
+            name: aptitude
+            state: latest
+            update_cache: true
+
+        - name: Install required system packages
+          apt:
+            pkg:
+              - ca-certificates
+              - curl
+            state: latest
+            update_cache: true
+
+        - name: Add Docker GPG apt Key
+          apt_key:
+            url: https://download.docker.com/linux/debian/gpg
+            state: present
+
+        - name: Add Docker Repository
+          apt_repository:
+            repo: deb https://download.docker.com/linux/debian {{ ansible_facts['distribution_release'] }} stable
+            state: present
+
+        - name: Update apt and install docker
+          apt:
+            name: "{{ docker_debian_packages }}"
+            state: latest
+            update_cache: true
+
+        - name: adding user '{{ ansible_user_id }}' to docker group
+          user:
+            name: "{{ ansible_user_id }}"
+            groups: docker
+            append: yes
+
+        - name: docker service is running and enabled
+          ansible.builtin.systemd_service:
+            state: started
+            name: docker
+            enabled: true
+
+    - name: Clone Dotfiles
+      ansible.builtin.git:
+        repo: "https://github.com/jamiemoore/dotfiles.git"
+        dest: "$HOME/dotfiles"
+        # clone: no
+        update: yes
+
+    - name: Get stats of the symlink
+      ansible.builtin.stat:
+        path: "$HOME/.zshrc"
+      register: symfile
+
+    - name: remove existing dotfiles ready for stow
+      when: symfile.stat is defined and symfile.stat.islnk is not defined
+      ansible.builtin.file:
+        path: $HOME/.zshrc
+        state: absent
+
+    - name: Running Stow
+      changed_when: false
+      ansible.builtin.shell: >
+        stow -d $HOME/dotfiles .
