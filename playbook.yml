@@ -6,34 +6,36 @@
     - "min"
   vars:
     brew_packages:
-      - coreutils
-      - git
-      - tmux
-      - tldr
       - ack
       - autojump
+      - aws-vault
       - awscli
+      - btop
+      - coreutils
       - curl
       - fzf
       - gh
+      - git
       - go
-      - mise
+      - jq
+      - mitmproxy
+      - mtr
       - mysql-client
       - parallel
-      - yq
-      - jq
-      - aws-vault
       - pipx
-      - btop
       - stow
+      - tldr
+      - tmux
+      - vim
       - whois
+      - yq
     pipx_packages:
       - mitmproxy
     docker_debian_packages:
-      - docker-ce
-      - docker-ce-cli
       - containerd.io
       - docker-buildx-plugin
+      - docker-ce
+      - docker-ce-cli
       - docker-compose-plugin
 
   tasks:
@@ -41,7 +43,7 @@
     #   debug:
     #     msg: "{{ ansible_facts }}"
 
-    - name: Install Homebrew
+    - name: Homebrew Installation
       block:
         - name: Check if Homebrew exists
           ansible.builtin.raw: which brew
@@ -57,7 +59,7 @@
           become_user: root
           when: homebrew_exists.rc == 1
 
-    - name: Homebrew Stuff
+    - name: Homebrew
       when: homebrew_exists.rc == 0
       block:
         - name: Updating Homebrew
