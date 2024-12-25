@@ -23,6 +23,7 @@
       - mysql-client
       - parallel
       - pipx
+      - session-manager-plugin
       - stow
       - tldr
       - tmux
@@ -30,7 +31,7 @@
       - whois
       - yq
     pipx_packages:
-      - mitmproxy
+      -
     docker_debian_packages:
       - containerd.io
       - docker-buildx-plugin
