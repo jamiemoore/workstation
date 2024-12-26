@@ -27,9 +27,13 @@
       - stow
       - tldr
       - tmux
+      - tree
       - vim
       - whois
       - yq
+    osx_packages:
+      - colima
+      - docker
     pipx_packages:
       -
     docker_debian_packages:
@@ -79,6 +83,12 @@
           community.general.homebrew:
             name: "{{ brew_packages }}"
             state: present
+
+        - name: Installing OSX Homebrew Packages
+          community.general.homebrew:
+            name: "{{ osx_packages }}"
+            state: present
+          when: ansible_facts['os_family'] == "Darwin"
 
     - name: Changing Shell To ZSH
       ansible.builtin.user:
