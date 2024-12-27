@@ -15,12 +15,15 @@
       - curl
       - fzf
       - gh
+      - gnupg
       - git
       - go
+      - ioping
       - jq
       - mitmproxy
       - mtr
       - mysql-client
+      - ncdu
       - parallel
       - pipx
       - session-manager-plugin
@@ -31,11 +34,13 @@
       - vim
       - whois
       - yq
-    osx_packages:
+    brew_packages_osx:
       - colima
       - docker
     pipx_packages:
       -
+    pipx_packages_linux:
+      - dool
     docker_debian_packages:
       - containerd.io
       - docker-buildx-plugin
@@ -86,7 +91,7 @@
 
         - name: Installing OSX Homebrew Packages
           community.general.homebrew:
-            name: "{{ osx_packages }}"
+            name: "{{ brew_packages_osx }}"
             state: present
           when: ansible_facts['os_family'] == "Darwin"
 
