@@ -10,6 +10,7 @@
       - autojump
       - aws-vault
       - awscli
+      - bats
       - btop
       - coreutils
       - curl
@@ -26,6 +27,7 @@
       - ncdu
       - parallel
       - pipx
+      - pre-commit
       - session-manager-plugin
       - stow
       - tldr
@@ -37,6 +39,7 @@
     brew_packages_osx:
       - colima
       - docker
+      - docker-buildx
     pipx_packages:
       -
     pipx_packages_linux:
