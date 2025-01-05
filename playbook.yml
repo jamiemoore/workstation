@@ -55,6 +55,14 @@
     # - name: Show Facts
     #   debug:
     #     msg: "{{ ansible_facts }}"
+    - name: Allow user to sudo without a password
+      community.general.sudoers:
+        name: userisroot
+        state: present
+        user: "{{ ansible_user_id }}"
+        runas: root
+        commands: ALL
+      become: true
 
     - name: Homebrew Installation
       block:
@@ -104,15 +112,6 @@
         shell: /bin/zsh
       become: true
       become_user: root
-
-    - name: Allow user to sudo without a password
-      community.general.sudoers:
-        name: userisroot
-        state: present
-        user: "{{ ansible_user_id }}"
-        runas: root
-        commands: ALL
-      become: true
 
     - name: Get pipx location
       changed_when: false
@@ -175,7 +174,7 @@
     - name: Clone Dotfiles
       ansible.builtin.git:
         repo: "https://github.com/jamiemoore/dotfiles.git"
-        dest: "$HOME/dotfiles"
+        dest: "$HOME/projects/jamie/dotfiles"
         # clone: no
         update: yes
 
@@ -193,4 +192,4 @@
     - name: Running Stow
       changed_when: false
       ansible.builtin.shell: >
-        stow -d $HOME/dotfiles .
+        stow -d $HOME/projects/jamie/dotfiles .

@@ -1,54 +1,44 @@
-workstation
-=================
+# workstation
 
 Quickly configure my workstation developer environment.
 
-
-
 ## Environments
 
-* Mac OSX
-* Debian WSL
-
-
+- Mac OSX
+- Debian WSL
 
 ## Requirements
 
-* Homebrew
+- Homebrew
 
-* (on Mac) xcode cli
+- (on Mac) xcode cli
 
   ```
   xcode-select --install
   ```
 
-* Ansible
+- Ansible
 
   ```
   brew install ansible
   ```
 
-  
-
 ## Execution
 
-* Download using git
+- Download using git
 
   ```
   git clone git@github.com:jamiemoore/workstation.git
   ```
 
-* Move the current `.zshrc` (GNU Stow will not overwrite by design)
+- Move the current `.zshrc` (GNU Stow will not overwrite by design)
 
   ```
   mv ~/.zshrc ~/.zshrc.old
   ```
 
-* Run ansible
+- Run ansible
 
   ```
-  ansible-playbook playbook.yml
+  ansible-playbook -K playbook.yml
   ```
-
-  
-
