@@ -42,3 +42,12 @@ Quickly configure my workstation developer environment.
   ```
   ansible-playbook -K playbook.yml
   ```
+
+- Create a new gpg key
+
+  ```
+  gpg --full-generate-key
+  gpg --armor --export [EMAILGOESHERE] | pbcopy
+  ```
+
+- Add that key to your github account
