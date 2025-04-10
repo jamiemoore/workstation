@@ -192,4 +192,4 @@
     - name: Running Stow
       changed_when: false
       ansible.builtin.shell: >
-        stow -d $HOME/projects/jamie/dotfiles .
+        stow -d $HOME/projects/jamie/dotfiles -t $HOME .
