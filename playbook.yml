@@ -174,7 +174,7 @@
     - name: Clone Dotfiles
       ansible.builtin.git:
         repo: "https://github.com/jamiemoore/dotfiles.git"
-        dest: "$HOME/projects/jamie/dotfiles"
+        dest: "$HOME/projects/jamiemoore/dotfiles"
         # clone: no
         update: yes
 
@@ -192,4 +192,4 @@
     - name: Running Stow
       changed_when: false
       ansible.builtin.shell: >
-        stow -d $HOME/projects/jamie/dotfiles -t $HOME .
+        stow -d $HOME/projects/jamiemoore/dotfiles -t $HOME .
