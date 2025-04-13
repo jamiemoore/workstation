@@ -29,7 +29,7 @@
       - pipx
       - pre-commit
       - session-manager-plugin
-      - stow
+      - dotbot
       - tldr
       - tmux
       - tree
@@ -175,21 +175,8 @@
       ansible.builtin.git:
         repo: "https://github.com/jamiemoore/dotfiles.git"
         dest: "$HOME/projects/jamiemoore/dotfiles"
-        # clone: no
-        update: yes
 
-    - name: Get stats of the symlink
-      ansible.builtin.stat:
-        path: "$HOME/.zshrc"
-      register: symfile
-
-    - name: remove existing dotfiles ready for stow
-      when: symfile.stat is defined and symfile.stat.islnk is not defined
-      ansible.builtin.file:
-        path: $HOME/.zshrc
-        state: absent
-
-    - name: Running Stow
-      changed_when: false
+    - name: Running dotbot
+      changed_when: false # Commands show as always changed.
       ansible.builtin.shell: >
-        stow -d $HOME/projects/jamiemoore/dotfiles -t $HOME .
+        dotbot -c $HOME/projects/jamiemoore/dotfiles/install.conf.yaml
