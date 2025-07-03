@@ -14,13 +14,16 @@
       - btop
       - coreutils
       - curl
+      - exiftool
       - fzf
       - gh
       - gnupg
       - git
       - go
+      - imagemagick
       - ioping
       - jq
+      - lefthook
       - mitmproxy
       - mtr
       - mysql-client
